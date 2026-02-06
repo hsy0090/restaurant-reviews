@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import AddReview from "./components/add-review";
 import Login from "./components/login";
 import RestaurantsList from "./components/restaurants-list";
-import Restaurant from "./components/restaurant";
+import Restaurant from "./components/restaurants";
 
 function App() {
   const [user, setUser] = React.useState(null);
