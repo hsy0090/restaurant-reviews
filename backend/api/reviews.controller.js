@@ -6,10 +6,14 @@ export default class ReviewsController {
       const restaurantId = req.body.restaurant_id
       const review = req.body.text
       const userInfo = {
-        name: req.body.name,
-        _id: req.body.user_id
+        name: req.user?.name,
+        _id: req.user?.id
       }
       const date = new Date()
+
+      if (!userInfo._id) {
+        return res.status(401).json({ error: "Unauthorized" })
+      }
 
       const ReviewResponse = await ReviewsDAO.addReview(
         restaurantId,
@@ -29,9 +33,13 @@ export default class ReviewsController {
       const text = req.body.text
       const date = new Date()
 
+      if (!req.user?.id) {
+        return res.status(401).json({ error: "Unauthorized" })
+      }
+
       const reviewResponse = await ReviewsDAO.updateReview(
         reviewId,
-        req.body.user_id,
+        req.user?.id,
         text,
         date,
       )
@@ -56,8 +64,11 @@ export default class ReviewsController {
   static async apiDeleteReview(req, res, next) {
     try {
       const reviewId = req.query.id
-      const userId = req.body.user_id
+      const userId = req.user?.id
       console.log(reviewId)
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" })
+      }
       const reviewResponse = await ReviewsDAO.deleteReview(
         reviewId,
         userId,

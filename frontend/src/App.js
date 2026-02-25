@@ -5,11 +5,15 @@ import "./App.css";
 
 import AddReview from "./components/add-review";
 import Login from "./components/login";
+import Register from "./components/register";
 import RestaurantsList from "./components/restaurants-list";
 import Restaurant from "./components/restaurants";
 
 function App() {
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState(() => {
+    const raw = localStorage.getItem("auth_user");
+    return raw ? JSON.parse(raw) : null;
+  });
 
   function login(user = null) {
     setUser(user);
@@ -17,6 +21,15 @@ function App() {
 
   function logout() {
     setUser(null);
+    const refreshToken = localStorage.getItem("auth_refresh_token");
+    if (refreshToken) {
+      import("./services/auth").then(({ default: AuthService }) => {
+        AuthService.logout(refreshToken).catch(() => {});
+      });
+    }
+    localStorage.removeItem("auth_access_token");
+    localStorage.removeItem("auth_refresh_token");
+    localStorage.removeItem("auth_user");
   }
 
   return (
@@ -39,9 +52,14 @@ function App() {
                 Logout {user.name}
               </button>
             ) : (
-              <Link to="/login" className="nav-link">
-                Login
-              </Link>
+              <>
+                <Link to="/login" className="nav-link">
+                  Login
+                </Link>
+                <Link to="/register" className="nav-link">
+                  Register
+                </Link>
+              </>
             )}
           </li>
         </div>
@@ -66,6 +84,10 @@ function App() {
           <Route
             path="/login"
             element={<Login login={login} />}
+          />
+          <Route
+            path="/register"
+            element={<Register login={login} />}
           />
 
         </Routes>

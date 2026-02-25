@@ -22,8 +22,6 @@ const AddReview = (props) => {
   const saveReview = () => {
     const data = {
       text: review,
-      name: props.user.name,
-      user_id: props.user.id,
       restaurant_id: id,
     };
 

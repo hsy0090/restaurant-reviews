@@ -33,7 +33,7 @@ const Restaurant = (props) => {
   }, [id]);
 
   const deleteReview = (reviewId, index) => {
-    RestaurantDataService.deleteReview(reviewId, props.user.id)
+    RestaurantDataService.deleteReview(reviewId)
       .then(() => {
         setRestaurant((prev) => ({
           ...prev,
