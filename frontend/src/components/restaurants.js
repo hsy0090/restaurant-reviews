@@ -46,33 +46,53 @@ const Restaurant = (props) => {
   };
 
   return (
-    <div>
+    <div className="page">
       {restaurant ? (
         <div>
-          <h5>{restaurant.name}</h5>
+          <header className="detail-header">
+            <div>
+              <p className="eyebrow">Restaurant</p>
+              <h1>{restaurant.name}</h1>
+              <p className="subhead">
+                <span className="pill">{restaurant.cuisine}</span>
+                <span className="address">
+                  {restaurant.address.building} {restaurant.address.street}, {restaurant.address.zipcode}
+                </span>
+              </p>
+            </div>
+            <Link
+              to={`/restaurants/${id}/review`}
+              className="btn btn-primary"
+            >
+              Add Review
+            </Link>
+          </header>
 
-          <p>
-            <strong>Cuisine: </strong>{restaurant.cuisine}<br />
-            <strong>Address: </strong>
-            {restaurant.address.building}{" "}
-            {restaurant.address.street},{" "}
-            {restaurant.address.zipcode}
-          </p>
+          <section className="detail-grid">
+            <div className="detail-summary">
+              <h4>At a glance</h4>
+              <p className="subhead">
+                Explore recent feedback and see how this place stacks up.
+              </p>
+              <div className="summary-card">
+                <div>
+                  <span className="metric-value">{restaurant.reviews.length}</span>
+                  <span className="metric-label">Reviews</span>
+                </div>
+                <div>
+                  <span className="metric-value">Open</span>
+                  <span className="metric-label">Status</span>
+                </div>
+              </div>
+            </div>
 
-          <Link
-            to={`/restaurants/${id}/review`}
-            className="btn btn-primary"
-          >
-            Add Review
-          </Link>
-
-          <h4>Reviews</h4>
-
-          <div className="row">
+            <div className="detail-reviews">
+              <h4 className="section-title">Reviews</h4>
+              <div className="row card-grid">
             {restaurant.reviews.length > 0 ? (
               restaurant.reviews.map((review, index) => (
                 <div className="col-lg-4 pb-1" key={index}>
-                  <div className="card">
+                  <div className="card review-card">
                     <div className="card-body">
                       <p className="card-text">
                         {review.text}<br />
@@ -81,7 +101,7 @@ const Restaurant = (props) => {
                       </p>
 
                       {props.user && props.user.id === review.user_id && (
-                        <div className="row">
+                        <div className="row restaurant-actions">
                           <button
                             onClick={() => deleteReview(review._id, index)}
                             className="btn btn-primary col-lg-5 mx-1 mb-1"
@@ -108,6 +128,8 @@ const Restaurant = (props) => {
               </div>
             )}
           </div>
+            </div>
+          </section>
         </div>
       ) : (
         <div>

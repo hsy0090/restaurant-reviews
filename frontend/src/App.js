@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
 import AddReview from "./components/add-review";
 import Login from "./components/login";
@@ -19,13 +20,13 @@ function App() {
   }
 
   return (
-    <div>
-      <nav className="navbar navbar-expand navbar-dark bg-dark">
-        <a href="/restaurants" className="navbar-brand">
+    <div className="app-root">
+      <nav className="navbar navbar-expand topbar">
+        <Link to="/restaurants" className="navbar-brand brand">
           Restaurant Reviews
-        </a>
+        </Link>
 
-        <div className="navbar-nav mr-auto">
+        <div className="navbar-nav nav-links">
           <li className="nav-item">
             <Link to="/restaurants" className="nav-link">
               Restaurants
@@ -34,9 +35,9 @@ function App() {
 
           <li className="nav-item">
             {user ? (
-              <a onClick={logout} className="nav-link" style={{ cursor: "pointer" }}>
+              <button type="button" onClick={logout} className="nav-link btn-link">
                 Logout {user.name}
-              </a>
+              </button>
             ) : (
               <Link to="/login" className="nav-link">
                 Login
@@ -46,7 +47,7 @@ function App() {
         </div>
       </nav>
 
-      <div className="container mt-3">
+      <main className="app-container">
         <Routes>
 
           <Route path="/" element={<RestaurantsList />} />
@@ -68,7 +69,7 @@ function App() {
           />
 
         </Routes>
-      </div>
+      </main>
     </div>
   );
 }
