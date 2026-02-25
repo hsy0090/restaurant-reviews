@@ -57,6 +57,68 @@
   animation: fade-in 0.5s ease;
 }
 
+.hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.hero-copy h1 {
+  font-family: "DM Serif Display", serif;
+  font-size: clamp(2.4rem, 3.4vw, 3.4rem);
+  margin-bottom: 1rem;
+}
+
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.metric {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1rem;
+  display: grid;
+  gap: 0.3rem;
+  box-shadow: 0 10px 24px rgba(17, 18, 26, 0.08);
+}
+
+.metric-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.hero-panel {
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.hero-panel h3 {
+  font-family: "DM Serif Display", serif;
+  font-size: 1.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.search-stack {
+  display: grid;
+  gap: 1.2rem;
+  margin-top: 1.4rem;
+}
+
 .page-header {
   margin-bottom: 2.5rem;
 }
@@ -117,6 +179,32 @@
 
 .card-grid {
   gap: 1.5rem 0;
+}
+
+.results {
+  margin-top: 1rem;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.results-header h2 {
+  font-family: "DM Serif Display", serif;
+  margin-bottom: 0.2rem;
+}
+
+.empty-state {
+  background: #ffffff;
+  border: 1px dashed rgba(17, 18, 26, 0.2);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .restaurant-card,
@@ -184,10 +272,49 @@
   margin: 2rem 0 1rem;
 }
 
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.detail-summary {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 5.5rem;
+}
+
+.detail-summary h4 {
+  font-family: "DM Serif Display", serif;
+  margin-bottom: 0.6rem;
+}
+
+.summary-card {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.detail-reviews .card-grid {
+  margin-top: 1rem;
+}
+
 .form-page {
   display: flex;
   justify-content: center;
   padding-top: 2rem;
+}
+
+.form-split {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(200px, 320px);
+  gap: 2rem;
+  align-items: start;
 }
 
 .form-card {
@@ -197,6 +324,31 @@
   border: 1px solid var(--line);
   padding: 2rem;
   box-shadow: var(--shadow);
+}
+
+.form-aside {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 1.6rem;
+}
+
+.form-aside h3 {
+  font-family: "DM Serif Display", serif;
+  margin-bottom: 0.6rem;
+}
+
+.aside-tiles {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.aside-tile {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(17, 18, 26, 0.08);
 }
 
 .btn-primary,
@@ -251,6 +403,15 @@
 
   .app-container {
     padding: 2rem 1.2rem 3rem;
+  }
+
+  .detail-grid,
+  .form-split {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-summary {
+    position: static;
   }
 }
 
