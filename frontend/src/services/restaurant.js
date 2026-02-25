@@ -33,4 +33,5 @@ class RestaurantDataService {
 
 }
 
-export default new RestaurantDataService();
+const restaurantDataService = new RestaurantDataService();
+export default restaurantDataService;
