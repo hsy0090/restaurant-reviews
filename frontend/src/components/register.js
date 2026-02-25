@@ -5,13 +5,7 @@ import AuthService from "../services/auth";
 const Register = (props) => {
   const navigate = useNavigate();
 
-  const initialForm = {
-    name: "",
-    email: "",
-    password: "",
-  };
-
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +14,12 @@ const Register = (props) => {
     setForm({ ...form, [name]: value });
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") register();
+  };
+
   const register = async () => {
+    if (!form.name || !form.email || !form.password) return;
     setError("");
     setLoading(true);
     try {
@@ -47,10 +46,14 @@ const Register = (props) => {
         <div className="form-card">
           <p className="eyebrow">Get started</p>
           <h1>Create account</h1>
-          <p className="subhead">Join to save reviews and manage your profile.</p>
+          <p className="subhead">
+            Join to save reviews and manage your profile.
+          </p>
 
           <div className="form-group">
-            <label className="field-label" htmlFor="name">Full name</label>
+            <label className="field-label" htmlFor="name">
+              Full name
+            </label>
             <input
               type="text"
               className="form-control"
@@ -58,12 +61,17 @@ const Register = (props) => {
               required
               value={form.name}
               onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
               name="name"
+              placeholder="John Doe"
+              autoComplete="name"
             />
           </div>
 
           <div className="form-group">
-            <label className="field-label" htmlFor="email">Email</label>
+            <label className="field-label" htmlFor="email">
+              Email
+            </label>
             <input
               type="email"
               className="form-control"
@@ -71,12 +79,17 @@ const Register = (props) => {
               required
               value={form.email}
               onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
               name="email"
+              placeholder="you@example.com"
+              autoComplete="email"
             />
           </div>
 
           <div className="form-group">
-            <label className="field-label" htmlFor="password">Password</label>
+            <label className="field-label" htmlFor="password">
+              Password
+            </label>
             <input
               type="password"
               className="form-control"
@@ -84,14 +97,22 @@ const Register = (props) => {
               required
               value={form.password}
               onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
               name="password"
+              placeholder="Create a password"
+              autoComplete="new-password"
             />
           </div>
 
           {error && <p className="form-error">{error}</p>}
 
-          <button onClick={register} className="btn btn-success" disabled={loading}>
-            {loading ? "Creating..." : "Create account"}
+          <button
+            onClick={register}
+            className="btn btn-primary"
+            disabled={loading}
+            style={{ width: "100%" }}
+          >
+            {loading ? "Creating account..." : "Create account"}
           </button>
 
           <p className="form-foot">
@@ -101,7 +122,10 @@ const Register = (props) => {
 
         <aside className="form-aside">
           <h3>What you get</h3>
-          <p>Track reviews, revisit your favorites, and share trusted recommendations.</p>
+          <p>
+            Track reviews, revisit your favorites, and share trusted
+            recommendations.
+          </p>
           <div className="aside-tiles">
             <div className="aside-tile">Personal review history</div>
             <div className="aside-tile">Edit or delete reviews</div>

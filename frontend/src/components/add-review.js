@@ -7,45 +7,33 @@ const AddReview = (props) => {
   const location = useLocation();
 
   const currentReview = location.state?.currentReview;
-
   const editing = !!currentReview;
 
-  const [review, setReview] = useState(
-    editing ? currentReview.text : ""
-  );
+  const [review, setReview] = useState(editing ? currentReview.text : "");
   const [submitted, setSubmitted] = useState(false);
-
-  const handleInputChange = (event) => {
-    setReview(event.target.value);
-  };
+  const [saving, setSaving] = useState(false);
 
   const saveReview = () => {
+    if (!review.trim()) return;
+    setSaving(true);
+
     const data = {
       text: review,
       restaurant_id: id,
     };
 
-    if (editing) {
-      data.review_id = currentReview._id;
+    const request = editing
+      ? RestaurantDataService.updateReview({ ...data, review_id: currentReview._id })
+      : RestaurantDataService.createReview(data);
 
-      RestaurantDataService.updateReview(data)
-        .then((response) => {
-          setSubmitted(true);
-          console.log(response.data);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    } else {
-      RestaurantDataService.createReview(data)
-        .then((response) => {
-          setSubmitted(true);
-          console.log(response.data);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
+    request
+      .then(() => setSubmitted(true))
+      .catch((e) => console.log(e))
+      .finally(() => setSaving(false));
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && e.ctrlKey) saveReview();
   };
 
   return (
@@ -53,13 +41,30 @@ const AddReview = (props) => {
       {props.user ? (
         <div className="page form-page">
           {submitted ? (
-            <div className="form-card">
-              <p className="eyebrow">All set</p>
-              <h4>You submitted successfully!</h4>
-              <Link
-                to={`/restaurants/${id}`}
-                className="btn btn-success"
+            <div className="form-card" style={{ textAlign: "center", maxWidth: 420 }}>
+              <div
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: "50%",
+                  background: "var(--success-light)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 1.25rem",
+                  fontSize: "1.5rem",
+                  color: "var(--success)",
+                }}
               >
+                &#10003;
+              </div>
+              <h4 style={{ fontFamily: '"Playfair Display", serif', marginBottom: "0.5rem" }}>
+                Review {editing ? "updated" : "submitted"}!
+              </h4>
+              <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", marginBottom: "1.5rem" }}>
+                Thanks for sharing your experience.
+              </p>
+              <Link to={`/restaurants/${id}`} className="btn btn-primary">
                 Back to Restaurant
               </Link>
             </div>
@@ -68,34 +73,44 @@ const AddReview = (props) => {
               <div className="form-card">
                 <p className="eyebrow">{editing ? "Update" : "Share"}</p>
                 <h1>{editing ? "Edit your review" : "Write a review"}</h1>
-                <p className="subhead">Be specific and helpful. Your words guide the next visit.</p>
+                <p className="subhead">
+                  Be specific and helpful. Your words guide the next visitor.
+                </p>
                 <div className="form-group">
                   <label className="field-label" htmlFor="text">
-                    {editing ? "Edit" : "Create"} Review
+                    Your review
                   </label>
-                  <input
-                    type="text"
+                  <textarea
                     className="form-control"
                     id="text"
                     required
                     value={review}
-                    onChange={handleInputChange}
+                    onChange={(e) => setReview(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     name="text"
+                    placeholder="What did you enjoy? How was the food, service, and atmosphere?"
+                    rows={5}
                   />
                 </div>
-                <button onClick={saveReview} className="btn btn-success">
-                  Submit
+                <button
+                  onClick={saveReview}
+                  className="btn btn-primary"
+                  disabled={saving || !review.trim()}
+                  style={{ width: "100%" }}
+                >
+                  {saving ? "Submitting..." : editing ? "Update review" : "Submit review"}
                 </button>
               </div>
 
               <aside className="form-aside">
                 <h3>Review tips</h3>
                 <p>
-                  Mention atmosphere, standout dishes, and service. Concrete details help others decide.
+                  Mention atmosphere, standout dishes, and service. Concrete
+                  details help others decide.
                 </p>
                 <div className="aside-tiles">
                   <div className="aside-tile">Highlight a favorite dish</div>
-                  <div className="aside-tile">Note the vibe</div>
+                  <div className="aside-tile">Describe the atmosphere</div>
                   <div className="aside-tile">Share value for money</div>
                 </div>
               </aside>
@@ -104,10 +119,15 @@ const AddReview = (props) => {
         </div>
       ) : (
         <div className="page form-page">
-          <div className="form-card">
-            <p className="eyebrow">Heads up</p>
-            <h4>Please log in.</h4>
-            <Link to="/login" className="btn btn-success">
+          <div className="form-card" style={{ textAlign: "center", maxWidth: 420 }}>
+            <p className="eyebrow">Authentication required</p>
+            <h4 style={{ fontFamily: '"Playfair Display", serif', marginBottom: "0.5rem" }}>
+              Please log in to write a review
+            </h4>
+            <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", marginBottom: "1.5rem" }}>
+              You need an account to share reviews.
+            </p>
+            <Link to="/login" className="btn btn-primary">
               Go to Login
             </Link>
           </div>

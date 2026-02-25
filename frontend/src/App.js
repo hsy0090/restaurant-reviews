@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -14,6 +14,8 @@ function App() {
     const raw = localStorage.getItem("auth_user");
     return raw ? JSON.parse(raw) : null;
   });
+
+  const location = useLocation();
 
   function login(user = null) {
     setUser(user);
@@ -32,64 +34,79 @@ function App() {
     localStorage.removeItem("auth_user");
   }
 
+  const getInitials = (name) => {
+    return name
+      .split(" ")
+      .map((w) => w[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + "/");
+
   return (
     <div className="app-root">
-      <nav className="navbar navbar-expand topbar">
-        <Link to="/restaurants" className="navbar-brand brand">
+      <nav className="topbar">
+        <Link to="/restaurants" className="brand">
           Restaurant Reviews
         </Link>
 
-        <div className="navbar-nav nav-links">
-          <li className="nav-item">
-            <Link to="/restaurants" className="nav-link">
-              Restaurants
-            </Link>
-          </li>
+        <div className="nav-links">
+          <Link
+            to="/restaurants"
+            className={`nav-link ${isActive("/restaurants") || location.pathname === "/" ? "active" : ""}`}
+            style={
+              isActive("/restaurants") || location.pathname === "/"
+                ? { color: "var(--text-primary)", background: "var(--gray-100)" }
+                : {}
+            }
+          >
+            Restaurants
+          </Link>
 
-          <li className="nav-item">
-            {user ? (
-              <button type="button" onClick={logout} className="nav-link btn-link">
-                Logout {user.name}
+          {user ? (
+            <div className="nav-user">
+              <div className="nav-avatar">{getInitials(user.name)}</div>
+              <button
+                type="button"
+                onClick={logout}
+                className="nav-link btn-link"
+              >
+                Logout
               </button>
-            ) : (
-              <>
-                <Link to="/login" className="nav-link">
-                  Login
-                </Link>
-                <Link to="/register" className="nav-link">
-                  Register
-                </Link>
-              </>
-            )}
-          </li>
+            </div>
+          ) : (
+            <>
+              <Link to="/login" className="nav-link">
+                Log in
+              </Link>
+              <Link
+                to="/register"
+                className="btn btn-primary"
+                style={{ padding: "0.4rem 1rem", fontSize: "0.825rem" }}
+              >
+                Sign up
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
       <main className="app-container">
         <Routes>
-
           <Route path="/" element={<RestaurantsList />} />
           <Route path="/restaurants" element={<RestaurantsList />} />
-
           <Route
             path="/restaurants/:id/review"
             element={<AddReview user={user} />}
           />
-
           <Route
             path="/restaurants/:id"
             element={<Restaurant user={user} />}
           />
-
-          <Route
-            path="/login"
-            element={<Login login={login} />}
-          />
-          <Route
-            path="/register"
-            element={<Register login={login} />}
-          />
-
+          <Route path="/login" element={<Login login={login} />} />
+          <Route path="/register" element={<Register login={login} />} />
         </Routes>
       </main>
     </div>
